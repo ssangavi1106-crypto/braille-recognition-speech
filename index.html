@@ -3,1021 +3,509 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>AI Braille Recognition & Speech Studio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=JetBrains+Mono&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --bg-gradient: radial-gradient(circle at 10% 20%, #0a0f1d 0%, #15102a 50%, #0d1326 100%);
-            --card-bg: rgba(26, 34, 56, 0.75);
-            --card-border: rgba(255, 255, 255, 0.12);
-            --accent-primary: #6366f1;
-            --accent-glow: rgba(99, 102, 241, 0.35);
-            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --bg: #0d1326;
+            --card: #1a2238;
+            --border: #ffffff20;
+            --primary: #6366f1;
+            --muted: #94a3b8
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Outfit', sans-serif;
+            font-family: Outfit, sans-serif
         }
 
         body {
-            background: var(--bg-gradient);
-            color: var(--text-main);
+            background: radial-gradient(circle at 10% 20%, #0a0f1d, #15102a, #0d1326);
+            color: #f8fafc;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 24px;
+            padding: 20px
         }
 
-        .studio-container {
+        .container {
             width: 100%;
             max-width: 780px;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            backdrop-filter: blur(20px);
-            padding: 32px;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.65), 0 0 40px -10px var(--accent-glow);
+            background: #1a2238cc;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 28px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px #0008
         }
 
         header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 22px
         }
 
         .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(99, 102, 241, 0.15);
-            border: 1px solid rgba(99, 102, 241, 0.3);
             color: #a5b4fc;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
+            background: #6366f125;
+            border: 1px solid #6366f150;
+            border-radius: 30px;
+            padding: 5px 12px;
+            font-size: 12px
         }
 
-        header h1 {
+        h1 {
             font-size: 30px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 6px;
+            margin: 12px 0 5px
         }
 
         header p {
-            color: var(--text-muted);
-            font-size: 14px;
+            color: var(--muted);
+            font-size: 14px
         }
 
-        /* Mode Selector Tabs (Upload vs Camera) */
-        .mode-tabs {
+        .tabs,
+        .filters,
+        .controls {
             display: flex;
-            background: rgba(15, 23, 42, 0.6);
-            padding: 4px;
-            border-radius: 14px;
-            border: 1px solid var(--card-border);
-            margin-bottom: 20px;
-            gap: 4px;
+            gap: 10px;
+            justify-content: center
         }
 
-        .tab-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.25s ease;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-main);
-        }
-
-        .tab-btn.active {
-            background: var(--accent-primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-        }
-
-        /* Upload Area */
-        .drop-zone {
-            border: 2px dashed rgba(99, 102, 241, 0.4);
-            border-radius: 18px;
-            padding: 34px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(15, 23, 42, 0.4);
-            margin-bottom: 20px;
-        }
-
-        .drop-zone:hover,
-        .drop-zone.dragover {
-            border-color: var(--accent-primary);
-            background: rgba(99, 102, 241, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .drop-zone .icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        /* Live Camera Section */
-        .camera-container {
-            display: none;
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            max-height: 280px;
+        .tabs {
+            background: #0f172a99;
+            padding: 5px;
             border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-            margin-bottom: 14px;
+            margin-bottom: 18px
         }
 
-        #webcamVideo {
+        button,
+        select {
+            cursor: pointer
+        }
+
+        .tab,
+        .secondary,
+        .retake,
+        .filter,
+        .action {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 15px;
+            color: var(--muted);
+            background: #ffffff0d
+        }
+
+        .tab {
+            flex: 1;
+            font-weight: 600
+        }
+
+        .active,
+        .tab.active,
+        .filter.active {
+            background: var(--primary);
+            color: white
+        }
+
+        .drop {
+            border: 2px dashed #6366f166;
+            border-radius: 16px;
+            padding: 35px;
+            text-align: center;
+            cursor: pointer;
+            background: #0f172a66;
+            margin-bottom: 18px
+        }
+
+        .drop:hover {
+            border-color: var(--primary)
+        }
+
+        .camera,
+        .preview {
+            display: none;
+            text-align: center;
+            margin-bottom: 18px;
+            background: #0f172a66;
+            padding: 16px;
+            border-radius: 15px
+        }
+
+        video {
             width: 100%;
             max-height: 280px;
             object-fit: cover;
-            display: block;
+            border-radius: 12px
         }
 
-        .camera-controls {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        .btn-capture {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-capture:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-muted);
-            border: 1px solid var(--card-border);
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: var(--text-main);
-        }
-
-        .btn-retake {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-main);
-            border: 1px solid var(--card-border);
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-retake:hover {
-            background: rgba(255, 255, 255, 0.16);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-        }
-
-        /* Preview Area */
-        .preview-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .preview-wrapper {
-            display: inline-block;
-            max-width: 100%;
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid var(--card-border);
-            background: #090d16;
-            margin-bottom: 12px;
-        }
-
-        #imagePreview {
+        .preview img {
             max-width: 100%;
             max-height: 240px;
-            display: block;
             object-fit: contain;
-            transition: filter 0.2s ease;
+            border-radius: 12px;
+            margin-bottom: 10px
         }
 
         .filters {
+            margin: 12px 0
+        }
+
+        .filter {
+            padding: 6px 12px;
+            font-size: 12px
+        }
+
+        .settings {
             display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 5px 12px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .filter-btn:hover,
-        .filter-btn.active {
-            background: var(--accent-primary);
-            color: white;
-            border-color: var(--accent-primary);
-        }
-
-        /* Settings Bar (All Languages Selection) */
-        .settings-bar {
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 12px 18px;
-            margin-bottom: 20px;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .settings-bar label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #cbd5e1;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .lang-select {
-            background: #1e293b;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 8px 14px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            outline: none;
-            max-width: 260px;
-            transition: border-color 0.2s;
-        }
-
-        .lang-select:focus {
-            border-color: var(--accent-primary);
-        }
-
-        .lang-select optgroup {
-            background: #0f172a;
-            color: #94a3b8;
-            font-weight: 700;
-        }
-
-        .lang-select option {
-            background: #1e293b;
-            color: #f8fafc;
-            padding: 4px;
-        }
-
-        /* Action Button */
-        .process-btn {
-            width: 100%;
-            background: var(--accent-gradient);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
             align-items: center;
             gap: 10px;
-            transition: all 0.25s ease;
-            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+            flex-wrap: wrap;
+            background: #0f172a66;
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 18px
         }
 
-        .process-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px -5px rgba(99, 102, 241, 0.5);
+        select {
+            background: #1e293b;
+            color: white;
+            border: 1px solid #ffffff30;
+            border-radius: 9px;
+            padding: 9px;
+            max-width: 100%
         }
 
-        .process-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        .process {
+            width: 100%;
+            padding: 14px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+            color: white;
+            font-size: 16px;
+            font-weight: 700
         }
 
-        /* Loader */
+        button:disabled {
+            opacity: .4;
+            cursor: not-allowed
+        }
+
         .loader {
             display: none;
             text-align: center;
             padding: 20px;
-            color: #a5b4fc;
-            font-size: 14px;
+            color: #a5b4fc
         }
 
         .spinner {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            border: 3px solid rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #ffffff30;
             border-top-color: #c084fc;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 8px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            animation: spin .8s linear infinite
         }
 
         @keyframes spin {
             to {
-                transform: rotate(360deg);
+                transform: rotate(360deg)
             }
         }
 
-        /* Results Display */
-        .results-section {
-            margin-top: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        .results {
+            display: grid;
+            gap: 14px;
+            margin-top: 22px
         }
 
-        .result-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 18px;
-            position: relative;
+        .result {
+            background: #0f172a99;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px
         }
 
-        .result-header {
+        .result-head {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .result-header .label {
+            color: var(--muted);
             font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #94a3b8;
-            font-weight: 600;
+            margin-bottom: 8px
         }
 
-        .copy-btn {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            transition: color 0.2s;
+        .copy {
+            background: none;
+            border: 0;
+            color: #a5b4fc
         }
 
-        .copy-btn:hover {
-            color: #a5b4fc;
-        }
-
-        .result-box {
+        .output {
             font-size: 18px;
-            color: #ffffff;
-            min-height: 28px;
-            word-break: break-word;
             line-height: 1.5;
+            word-break: break-word;
+            min-height: 28px
         }
 
-        .braille-font {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 28px;
-            letter-spacing: 4px;
+        .braille {
+            font: 28px 'JetBrains Mono';
             color: #c084fc;
+            letter-spacing: 4px
         }
 
-        /* Audio & Download Action Buttons Grid */
-        .audio-controls-row {
+        .actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px
         }
 
-        .download-controls-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .action-btn {
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 14px;
+        .action {
             font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            text-decoration: none;
+            text-align: center
         }
 
-        .play-btn {
-            background: rgba(16, 185, 129, 0.15);
+        .play {
             color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-color: #10b98166
         }
 
-        .play-btn:hover:not(:disabled) {
-            background: rgba(16, 185, 129, 0.25);
-            border-color: #10b981;
-        }
-
-        /* Distinct Stop Button */
-        .stop-btn {
-            background: rgba(239, 68, 68, 0.15);
+        .stop {
             color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-color: #ef444466
         }
 
-        .stop-btn:hover:not(:disabled) {
-            background: rgba(239, 68, 68, 0.25);
-            border-color: #ef4444;
-            color: #fca5a5;
-        }
-
-        .download-btn {
-            background: rgba(99, 102, 241, 0.12);
+        .download {
             color: #a5b4fc;
-            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-color: #6366f166
         }
 
-        .download-btn:hover:not(:disabled) {
-            background: rgba(99, 102, 241, 0.22);
-            border-color: #818cf8;
-            color: white;
-        }
+        @media(max-width:500px) {
+            .container {
+                padding: 18px
+            }
 
-        .action-btn:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-            pointer-events: none;
+            h1 {
+                font-size: 24px
+            }
+
+            .drop {
+                padding: 25px 10px
+            }
+
+            .settings {
+                display: block
+            }
+
+            .settings select {
+                width: 100%;
+                margin-top: 10px
+            }
         }
     </style>
 </head>
 
 <body>
-
-    <div class="studio-container">
+    <div class="container">
         <header>
-            <div class="badge">🌐 OCR & Braille Voice Studio</div>
+            <span class="badge">🌐 OCR & Braille Voice Studio</span>
             <h1>Braille Recognition & Speech</h1>
-            <p>Upload an image or use your camera to convert words & full sentences between Braille and Audio Speech</p>
+            <p>Upload an image or use your camera to convert words & sentences between Braille and Audio</p>
         </header>
 
-        <!-- Upload vs Camera Mode Tabs -->
-        <div class="mode-tabs">
-            <button id="tabUpload" class="tab-btn active" onclick="switchMode('upload')">
-                📁 File Upload
-            </button>
-            <button id="tabCamera" class="tab-btn" onclick="switchMode('camera')">
-                📸 Live Camera
-            </button>
+        <div class="tabs">
+            <button class="tab active" id="tabUpload" onclick="switchMode('upload')">📁 File Upload</button>
+            <button class="tab" id="tabCamera" onclick="switchMode('camera')">📸 Live Camera</button>
         </div>
 
-        <!-- Mode 1: File Drop Zone -->
-        <div id="dropZone" class="drop-zone" onclick="document.getElementById('fileInput').click()">
-            <div class="icon">📁</div>
-            <p><strong>Click to upload</strong> or drag & drop an image</p>
-            <p style="font-size: 12px; margin-top: 6px; color: #64748b;">Supports English text, Braille characters, or
-                Braille dots (PNG, JPG, WEBP)</p>
+        <div class="drop" id="drop" onclick="fileInput.click()">
+            <div style="font-size:38px">📁</div>
+            <strong>Click to upload or drag & drop</strong>
+            <p style="font-size:12px;color:#64748b;margin-top:6px">PNG, JPG, WEBP</p>
         </div>
-        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        <input type="file" id="fileInput" accept="image/*" hidden>
 
-        <!-- Mode 2: Live Camera View -->
-        <div id="cameraContainer" class="camera-container">
-            <div class="video-wrapper">
-                <video id="webcamVideo" autoplay playsinline></video>
-            </div>
-            <div class="camera-controls">
-                <button id="captureBtn" class="btn-capture" onclick="captureCameraPhoto()">
-                    📸 Snap Photo
-                </button>
-                <button id="startCamBtn" class="btn-secondary" onclick="startCamera()" style="display: none;">
-                    📷 Turn On Camera
-                </button>
+        <div class="camera" id="camera">
+            <video id="video" autoplay playsinline></video>
+            <div class="controls" style="margin-top:12px">
+                <button class="action play" onclick="capture()">📸 Snap Photo</button>
+                <button class="secondary" id="startBtn" onclick="startCamera()">Turn On Camera</button>
             </div>
         </div>
-        <canvas id="captureCanvas" style="display: none;"></canvas>
+        <canvas id="canvas" hidden></canvas>
 
-        <!-- Image Preview & Filters -->
-        <div id="previewContainer" class="preview-container" style="display: none;">
-            <div class="preview-wrapper">
-                <img id="imagePreview" src="" alt="Preview">
-            </div>
+        <div class="preview" id="preview">
+            <img id="image" alt="Preview">
             <div class="filters">
-                <button class="filter-btn active" onclick="applyFilter('original', this)">Original</button>
-                <button class="filter-btn" onclick="applyFilter('grayscale', this)">Grayscale</button>
-                <button class="filter-btn" onclick="applyFilter('threshold', this)">Threshold</button>
+                <button class="filter active" onclick="filterImage('none',this)">Original</button>
+                <button class="filter" onclick="filterImage('grayscale(100%)',this)">Grayscale</button>
+                <button class="filter" onclick="filterImage('grayscale(100%) contrast(300%)',this)">Threshold</button>
             </div>
-            <div style="margin-top: 12px;">
-                <button class="btn-retake" onclick="resetImageSelection()">
-                    🔄 Choose Different Image / Retake
-                </button>
-            </div>
+            <button class="secondary" onclick="resetImage()">🔄 Choose Different Image / Retake</button>
         </div>
 
-        <!-- All Languages Selector -->
-        <div class="settings-bar">
-            <label for="langSelect">
-                🌐 Voice Audio Language:
-            </label>
-            <select id="langSelect" class="lang-select">
+        <div class="settings">
+            <label>🌐 Voice Audio Language:</label>
+            <select id="lang">
                 <optgroup label="Popular Languages">
-                    <option value="en" selected>English</option>
+                    <option value="en">English</option>
                     <option value="ta">Tamil (தமிழ்)</option>
-                    <option value="hi">Hindi (हिन्दी)</option>
-                    <option value="te">Telugu (తెలుగు)</option>
-                    <option value="ml">Malayalam (മലയാളം)</option>
-                    <option value="kn">Kannada (ಕನ್ನಡ)</option>
-                    <option value="bn">Bengali (বাংলা)</option>
-                    <option value="gu">Gujarati (ગુજરાતી)</option>
-                    <option value="mr">Marathi (मराठी)</option>
-                    <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
-                    <option value="ur">Urdu (اردو)</option>
+                    <option value="hi">Hindi</option>
+                    <option value="te">Telugu</option>
+                    <option value="ml">Malayalam</option>
+                    <option value="kn">Kannada</option>
+                    <option value="bn">Bengali</option>
+                    <option value="gu">Gujarati</option>
+                    <option value="mr">Marathi</option>
+                    <option value="pa">Punjabi</option>
+                    <option value="ur">Urdu</option>
                     <option value="es">Spanish</option>
                     <option value="fr">French</option>
                     <option value="de">German</option>
                     <option value="ar">Arabic</option>
-                    <option value="zh-CN">Chinese (Simplified)</option>
+                    <option value="zh-CN">Chinese</option>
                     <option value="ja">Japanese</option>
                     <option value="ko">Korean</option>
                     <option value="ru">Russian</option>
                     <option value="pt">Portuguese</option>
                     <option value="it">Italian</option>
                 </optgroup>
-                <optgroup id="allLangsGroup" label="All Languages (A–Z)">
-                    <!-- Dynamically populated or filled with all 69 supported languages -->
-                </optgroup>
+                <optgroup id="allLangs" label="All Languages (A–Z)"></optgroup>
             </select>
         </div>
 
-        <!-- Process Button -->
-        <button id="processBtn" class="process-btn" onclick="processImage()" disabled>
-            <span>⚡</span> Extract & Translate (Text ↔ Braille Speech)
-        </button>
-
-        <!-- Processing Loader -->
-        <div id="loader" class="loader">
-            <div class="spinner"></div>
-            <div>Processing image via OCR & synthesizing audio in selected language...</div>
+        <button class="process" id="process" onclick="processImage()" disabled>⚡ Extract & Translate (Text ↔ Braille
+            Speech)</button>
+        <div class="loader" id="loader">
+            <div class="spinner"></div>Processing image via OCR & synthesizing audio...
         </div>
 
-        <!-- Results Section -->
-        <div class="results-section">
-            <!-- Braille Card -->
-            <div class="result-card">
-                <div class="result-header">
-                    <span class="label">Braille Sentence / Pattern</span>
-                    <button class="copy-btn" onclick="copyResult('brailleResult')">📋 Copy</button>
-                </div>
-                <div id="brailleResult" class="result-box braille-font">—</div>
+        <div class="results">
+            <div class="result">
+                <div class="result-head">BRAILLE SENTENCE / PATTERN <button class="copy"
+                        onclick="copyResult('braille')">📋 Copy</button></div>
+                <div class="output braille" id="braille">—</div>
             </div>
-
-            <!-- Translated Text Card -->
-            <div class="result-card">
-                <div class="result-header">
-                    <span class="label">Recognized / Translated Sentence</span>
-                    <button class="copy-btn" onclick="copyResult('textResult')">📋 Copy</button>
-                </div>
-                <div id="textResult" class="result-box">—</div>
+            <div class="result">
+                <div class="result-head">RECOGNIZED / TRANSLATED SENTENCE <button class="copy"
+                        onclick="copyResult('text')">📋 Copy</button></div>
+                <div class="output" id="text">—</div>
             </div>
-
-            <!-- Audio Controls (Play & Stop Buttons) -->
-            <div class="audio-controls-row">
-                <button id="playAudioBtn" class="action-btn play-btn" onclick="playAudio()" disabled>
-                    <span>🔊</span> Play Audio
-                </button>
-                <button id="stopAudioBtn" class="action-btn stop-btn" onclick="stopAudio()" disabled>
-                    <span>⏹</span> Stop Audio
-                </button>
-            </div>
-
-            <!-- Download Actions -->
-            <div class="download-controls-row">
-                <button id="downloadAudioBtn" class="action-btn download-btn" onclick="downloadAudio()" disabled>
-                    📥 Download MP3
-                </button>
-                <button id="downloadTextBtn" class="action-btn download-btn" onclick="downloadText()" disabled>
-                    📄 Download Text & Braille
-                </button>
+            <div class="actions">
+                <button class="action play" id="play" onclick="playAudio()" disabled>🔊 Play Audio</button>
+                <button class="action stop" id="stop" onclick="stopAudio()" disabled>⏹ Stop Audio</button>
+                <button class="action download" id="downloadAudio" onclick="downloadAudio()" disabled>📥 Download
+                    MP3</button>
+                <button class="action download" id="downloadText" onclick="downloadText()" disabled>📄 Download Text &
+                    Braille</button>
             </div>
         </div>
     </div>
 
     <script>
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const tabUpload = document.getElementById('tabUpload');
-        const tabCamera = document.getElementById('tabCamera');
+        const API = 'http://127.0.0.1:5000';
+        const $ = id => document.getElementById(id);
+        let file = null, stream = null, audio = null;
 
-        const previewContainer = document.getElementById('previewContainer');
-        const imagePreview = document.getElementById('imagePreview');
-        const processBtn = document.getElementById('processBtn');
-        const loader = document.getElementById('loader');
-        const playAudioBtn = document.getElementById('playAudioBtn');
-        const stopAudioBtn = document.getElementById('stopAudioBtn');
-        const downloadAudioBtn = document.getElementById('downloadAudioBtn');
-        const downloadTextBtn = document.getElementById('downloadTextBtn');
-        const langSelect = document.getElementById('langSelect');
-        const allLangsGroup = document.getElementById('allLangsGroup');
-
-        const brailleResult = document.getElementById('brailleResult');
-        const textResult = document.getElementById('textResult');
-
-        const cameraContainer = document.getElementById('cameraContainer');
-        const webcamVideo = document.getElementById('webcamVideo');
-        const captureCanvas = document.getElementById('captureCanvas');
-        const captureBtn = document.getElementById('captureBtn');
-        const startCamBtn = document.getElementById('startCamBtn');
-
-        let currentFile = null;
-        let cameraStream = null;
-        let currentAudio = null; // Active audio instance
-
-        // --- Load All Supported Languages ---
-        const FULL_LANGUAGES = {
-            "af": "Afrikaans", "am": "Amharic", "ar": "Arabic", "bg": "Bulgarian", "bn": "Bengali",
-            "bs": "Bosnian", "ca": "Catalan", "cs": "Czech", "cy": "Welsh", "da": "Danish",
-            "de": "German", "el": "Greek", "en": "English", "es": "Spanish", "et": "Estonian",
-            "eu": "Basque", "fi": "Finnish", "fr": "French", "fr-CA": "French (Canada)", "gl": "Galician",
-            "gu": "Gujarati", "ha": "Hausa", "hi": "Hindi", "hr": "Croatian", "hu": "Hungarian",
-            "id": "Indonesian", "is": "Icelandic", "it": "Italian", "iw": "Hebrew", "ja": "Japanese",
-            "jw": "Javanese", "km": "Khmer", "kn": "Kannada", "ko": "Korean", "la": "Latin",
-            "lt": "Lithuanian", "lv": "Latvian", "ml": "Malayalam", "mr": "Marathi", "ms": "Malay",
-            "my": "Myanmar (Burmese)", "ne": "Nepali", "nl": "Dutch", "no": "Norwegian",
-            "pa": "Punjabi (Gurmukhi)", "pl": "Polish", "pt": "Portuguese (Brazil)", "pt-PT": "Portuguese (Portugal)",
-            "ro": "Romanian", "ru": "Russian", "si": "Sinhala", "sk": "Slovak", "sq": "Albanian",
-            "sr": "Serbian", "su": "Sundanese", "sv": "Swedish", "sw": "Swahili", "ta": "Tamil",
-            "te": "Telugu", "th": "Thai", "tl": "Filipino", "tr": "Turkish", "uk": "Ukrainian",
-            "ur": "Urdu", "vi": "Vietnamese", "yue": "Cantonese", "zh-CN": "Chinese (Simplified)",
-            "zh-TW": "Chinese (Taiwan)", "zh": "Chinese (Mandarin)"
+        const languages = {
+            af: 'Afrikaans', am: 'Amharic', ar: 'Arabic', bg: 'Bulgarian', bn: 'Bengali', bs: 'Bosnian', ca: 'Catalan', cs: 'Czech', cy: 'Welsh', da: 'Danish', de: 'German', el: 'Greek', en: 'English', es: 'Spanish', et: 'Estonian', eu: 'Basque', fi: 'Finnish', fr: 'French', 'fr-CA': 'French (Canada)', gl: 'Galician', gu: 'Gujarati', ha: 'Hausa', hi: 'Hindi', hr: 'Croatian', hu: 'Hungarian', id: 'Indonesian', is: 'Icelandic', it: 'Italian', iw: 'Hebrew', ja: 'Japanese', jw: 'Javanese', km: 'Khmer', kn: 'Kannada', ko: 'Korean', la: 'Latin', lt: 'Lithuanian', lv: 'Latvian', ml: 'Malayalam', mr: 'Marathi', ms: 'Malay', my: 'Myanmar', ne: 'Nepali', nl: 'Dutch', no: 'Norwegian', pa: 'Punjabi', pl: 'Polish', pt: 'Portuguese (Brazil)', 'pt-PT': 'Portuguese (Portugal)', ro: 'Romanian', ru: 'Russian', si: 'Sinhala', sk: 'Slovak', sq: 'Albanian', sr: 'Serbian', su: 'Sundanese', sv: 'Swedish', sw: 'Swahili', ta: 'Tamil', te: 'Telugu', th: 'Thai', tl: 'Filipino', tr: 'Turkish', uk: 'Ukrainian', ur: 'Urdu', vi: 'Vietnamese', yue: 'Cantonese', 'zh-CN': 'Chinese (Simplified)', 'zh-TW': 'Chinese (Taiwan)', zh: 'Chinese (Mandarin)'
         };
 
-        function populateLanguages(langs) {
-            allLangsGroup.innerHTML = '';
-            const sortedCodes = Object.keys(langs).sort((a, b) => langs[a].localeCompare(langs[b]));
-            for (const code of sortedCodes) {
-                const opt = document.createElement('option');
-                opt.value = code;
-                opt.textContent = `${langs[code]} (${code})`;
-                allLangsGroup.appendChild(opt);
-            }
+        function populateLanguages(data) {
+            $('allLangs').innerHTML = '';
+            Object.keys(data).sort((a, b) => data[a].localeCompare(data[b])).forEach(code => {
+                let o = new Option(`${data[code]} (${code})`, code); $('allLangs').append(o);
+            });
         }
+        populateLanguages(languages);
+        fetch(API + '/languages').then(r => r.json()).then(populateLanguages).catch(() => { });
 
-        // Initialize with full list immediately
-        populateLanguages(FULL_LANGUAGES);
-
-        // Also fetch from server to sync dynamically
-        fetch('/languages')
-            .then(res => res.json())
-            .then(langs => populateLanguages(langs))
-            .catch(() => { });
-
-        // --- Mode Switching (Upload vs Live Camera) ---
         function switchMode(mode) {
-            tabUpload.classList.toggle('active', mode === 'upload');
-            tabCamera.classList.toggle('active', mode === 'camera');
-
-            if (mode === 'upload') {
-                stopCamera();
-                cameraContainer.style.display = 'none';
-                if (!currentFile) {
-                    dropZone.style.display = 'block';
-                    previewContainer.style.display = 'none';
-                } else {
-                    dropZone.style.display = 'none';
-                    previewContainer.style.display = 'block';
-                }
-            } else {
-                dropZone.style.display = 'none';
-                if (!currentFile) {
-                    previewContainer.style.display = 'none';
-                    startCamera();
-                } else {
-                    startCamera();
-                }
-            }
+            $('tabUpload').classList.toggle('active', mode === 'upload');
+            $('tabCamera').classList.toggle('active', mode === 'camera');
+            if (mode === 'upload') { stopCamera(); $('camera').style.display = 'none'; $('drop').style.display = file ? 'none' : 'block'; $('preview').style.display = file ? 'block' : 'none'; }
+            else { $('drop').style.display = 'none'; file ? $('preview').style.display = 'block' : startCamera(); }
         }
 
-        // --- File Drag & Drop Handlers ---
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files && fileInput.files[0]) {
-                loadFile(fileInput.files[0]);
-            }
-        });
+        $('fileInput').onchange = e => { if (e.target.files[0]) loadFile(e.target.files[0]); };
+        $('drop').ondragover = e => { e.preventDefault(); $('drop').style.borderColor = '#6366f1'; };
+        $('drop').ondragleave = () => $('drop').style.borderColor = '';
+        $('drop').ondrop = e => { e.preventDefault(); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); };
 
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                loadFile(e.dataTransfer.files[0]);
-            }
-        });
-
-        function loadFile(file) {
-            currentFile = file;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                imagePreview.src = e.target.result;
-                previewContainer.style.display = 'block';
-                dropZone.style.display = 'none';
-                cameraContainer.style.display = 'none';
-                processBtn.disabled = false;
-            };
-            reader.readAsDataURL(file);
+        function loadFile(f) {
+            file = f; $('image').src = URL.createObjectURL(f);
+            $('preview').style.display = 'block'; $('drop').style.display = 'none'; $('camera').style.display = 'none'; $('process').disabled = false;
         }
-
-        // --- Live Camera Access ---
         async function startCamera() {
-            cameraContainer.style.display = 'block';
-            previewContainer.style.display = 'none';
-            dropZone.style.display = 'none';
-
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'environment', width: { ideal: 1280 } },
-                    audio: false
-                });
-                webcamVideo.srcObject = cameraStream;
-                if (captureBtn) captureBtn.style.display = 'inline-flex';
-                if (startCamBtn) startCamBtn.style.display = 'none';
-            } catch (err) {
-                console.error("Camera access error:", err);
-                alert("Unable to access camera. Please allow camera permissions in your browser and click 'Turn On Camera'.");
-                if (captureBtn) captureBtn.style.display = 'none';
-                if (startCamBtn) startCamBtn.style.display = 'inline-flex';
-            }
+            $('camera').style.display = 'block'; $('preview').style.display = 'none'; $('drop').style.display = 'none';
+            try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false }); $('video').srcObject = stream; $('startBtn').style.display = 'none'; }
+            catch (e) { alert('Camera access failed. Allow camera permission.'); $('startBtn').style.display = 'inline-block'; }
+        }
+        function stopCamera() { if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } }
+        function capture() {
+            if (!$('video').videoWidth) return;
+            $('canvas').width = $('video').videoWidth; $('canvas').height = $('video').videoHeight;
+            $('canvas').getContext('2d').drawImage($('video'), 0, 0);
+            $('canvas').toBlob(b => loadFile(new File([b], 'capture.jpg', { type: 'image/jpeg' })), 'image/jpeg');
+            stopCamera();
+        }
+        function resetImage() {
+            file = null; $('fileInput').value = ''; $('image').src = ''; $('preview').style.display = 'none'; $('process').disabled = true;
+            $('tabCamera').classList.contains('active') ? startCamera() : ($('drop').style.display = 'block', stopCamera());
+        }
+        function filterImage(f, b) {
+            document.querySelectorAll('.filter').forEach(x => x.classList.remove('active')); b.classList.add('active'); $('image').style.filter = f;
         }
 
-        function stopCamera() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-        }
-
-        function captureCameraPhoto() {
-            if (!webcamVideo.videoWidth) return;
-            captureCanvas.width = webcamVideo.videoWidth;
-            captureCanvas.height = webcamVideo.videoHeight;
-            const ctx = captureCanvas.getContext('2d');
-            ctx.drawImage(webcamVideo, 0, 0, captureCanvas.width, captureCanvas.height);
-
-            captureCanvas.toBlob(blob => {
-                currentFile = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
-                imagePreview.src = URL.createObjectURL(blob);
-                previewContainer.style.display = 'block';
-                cameraContainer.style.display = 'none';
-                dropZone.style.display = 'none';
-                processBtn.disabled = false;
-                stopCamera();
-            }, 'image/jpeg', 0.95);
-        }
-
-        function resetImageSelection() {
-            currentFile = null;
-            fileInput.value = '';
-            imagePreview.src = '';
-            previewContainer.style.display = 'none';
-            processBtn.disabled = true;
-
-            const isCameraMode = tabCamera.classList.contains('active');
-            if (isCameraMode) {
-                startCamera();
-            } else {
-                stopCamera();
-                dropZone.style.display = 'block';
-                cameraContainer.style.display = 'none';
-            }
-        }
-
-        // --- Image Filter Previews ---
-        function applyFilter(type, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            if (type === 'original') {
-                imagePreview.style.filter = 'none';
-            } else if (type === 'grayscale') {
-                imagePreview.style.filter = 'grayscale(100%)';
-            } else if (type === 'threshold') {
-                imagePreview.style.filter = 'grayscale(100%) contrast(300%)';
-            }
-        }
-
-        // --- Server Processing ---
         async function processImage() {
-            if (!currentFile) {
-                alert("Please upload or snap an image first!");
-                return;
-            }
-
-            stopAudio(); // Stop any currently playing audio
-            processBtn.style.display = 'none';
-            loader.style.display = 'block';
-
-            const formData = new FormData();
-            formData.append('file', currentFile);
-            formData.append('lang', langSelect.value);
-
-            const apiHost = window.location.origin.includes('http') ? window.location.origin : 'http://localhost:5000';
-
+            if (!file) return alert('Please upload or capture an image!');
+            stopAudio(); $('process').style.display = 'none'; $('loader').style.display = 'block';
             try {
-                const response = await fetch(`${apiHost}/predict`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error('Backend returned error ' + response.status);
+                let fd = new FormData(); fd.append('file', file); fd.append('lang', $('lang').value);
+                let r = await fetch(API + '/predict', { method: 'POST', body: fd });
+                if (!r.ok) throw Error('Flask HTTP ' + r.status);
+                let d = await r.json();
+                $('braille').textContent = d.braille || '—'; $('text').textContent = d.text || '—';
+                if (d.audio_url) {
+                    $('play').dataset.url = API + d.audio_url + '?t=' + Date.now();
+                    $('downloadAudio').dataset.url = API + d.audio_url + '?download=1&t=' + Date.now();
+                    $('play').disabled = $('downloadAudio').disabled = false; playAudio();
                 }
-
-                const data = await response.json();
-                brailleResult.innerText = data.braille;
-                textResult.innerText = data.text;
-
-                if (data.audio_url) {
-                    const freshUrl = `${apiHost}${data.audio_url}?t=${Date.now()}`;
-                    playAudioBtn.dataset.audioUrl = freshUrl;
-                    playAudioBtn.disabled = false;
-                    downloadAudioBtn.dataset.downloadUrl = `${apiHost}${data.audio_url}?download=1&t=${Date.now()}`;
-                    downloadAudioBtn.disabled = false;
-
-                    // Voice playback: Automatically speak the recognized/translated words!
-                    playAudio();
-                }
-
-                downloadTextBtn.disabled = false;
-
-            } catch (error) {
-                console.error(error);
-                alert("Could not connect to Flask server! Make sure app.py is running on port 5000.");
-            } finally {
-                loader.style.display = 'none';
-                processBtn.style.display = 'flex';
-            }
+                $('downloadText').disabled = false;
+            } catch (e) { alert('Could not connect to Flask at ' + API + '. Make sure app.py is running on port 5000.'); console.error(e); }
+            finally { $('loader').style.display = 'none'; $('process').style.display = 'block'; }
         }
-
-        // --- Audio Playback & Dedicated Stop Control ---
         function playAudio() {
-            const url = playAudioBtn.dataset.audioUrl;
-            if (url) {
-                stopAudio(); // Stop any existing playback first
-
-                currentAudio = new Audio(url);
-                playAudioBtn.innerHTML = '<span>🔊</span> Playing...';
-                stopAudioBtn.disabled = false;
-
-                currentAudio.onended = () => {
-                    resetAudioButtons();
-                };
-
-                currentAudio.onerror = (e) => {
-                    console.error("Audio playback error:", e);
-                    resetAudioButtons();
-                };
-
-                currentAudio.play().catch(e => {
-                    console.error("Playback error:", e);
-                    resetAudioButtons();
-                });
-            }
+            let url = $('play').dataset.url; if (!url) return;
+            stopAudio(); audio = new Audio(url); $('play').textContent = '🔊 Playing...'; $('stop').disabled = false;
+            audio.onended = resetAudio; audio.onerror = resetAudio; audio.play().catch(resetAudio);
         }
-
-        function stopAudio() {
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-                currentAudio = null;
-            }
-            resetAudioButtons();
-        }
-
-        function resetAudioButtons() {
-            playAudioBtn.innerHTML = '<span>🔊</span> Play Audio';
-            stopAudioBtn.disabled = true;
-        }
-
-        // --- Downloads & Clipboard ---
+        function stopAudio() { if (audio) { audio.pause(); audio.currentTime = 0; audio = null; } resetAudio(); }
+        function resetAudio() { $('play').textContent = '🔊 Play Audio'; $('stop').disabled = true; }
         function downloadAudio() {
-            const url = downloadAudioBtn.dataset.downloadUrl;
-            if (url) {
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'braille_speech.mp3';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
+            let a = document.createElement('a'); a.href = $('downloadAudio').dataset.url; a.download = 'braille_speech.mp3'; a.click();
         }
-
         function downloadText() {
-            const langName = langSelect.options[langSelect.selectedIndex].text;
-            const content = `=== BRAILLE RECOGNITION STUDIO REPORT ===\nDate: ${new Date().toLocaleString()}\nLanguage: ${langName}\n\nRECOGNIZED TEXT:\n${textResult.innerText}\n\nBRAILLE PATTERN:\n${brailleResult.innerText}\n`;
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'braille_results.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+            let content = `BRAILLE RECOGNITION STUDIO REPORT
+Date: ${new Date().toLocaleString()}
+Language: ${$('lang').selectedOptions[0].text}
 
-        function copyResult(elementId) {
-            const text = document.getElementById(elementId).innerText;
-            if (text && text !== '—') {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert("Copied to clipboard!");
-                });
-            }
+TEXT:
+${$('text').textContent}
+
+BRAILLE:
+${$('braille').textContent}`;
+            let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' })); a.download = 'braille_results.txt'; a.click();
+        }
+        function copyResult(id) {
+            let t = $(id).textContent; if (t && t !== '—') navigator.clipboard.writeText(t).then(() => alert('Copied!'));
         }
     </script>
 </body>
